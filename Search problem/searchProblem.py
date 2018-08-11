@@ -95,4 +95,26 @@ class SearchProblemFromExplicitGraph(SearchProblem):
 		"""Returns start node"""
 		return self.start
 
-	
+	def is_goal(self, node):
+		"""Returns bool specifiying if the node of query is a goal"""
+		return node in self.goals
+
+	def neighbors(self, node):
+		""" Gives the heuristic value of node given in arg
+			Returns 0 if not overridden by hmap
+		"""
+		if node in self.hmap:
+			return self.hmap[node]
+		return 0
+
+	def __repr__(self):
+		"""Returns the string representation of the search problem"""
+		res = ""
+		for arc in self.arcs:
+			res += str(arc) + ". "
+		return res
+
+	# For depth first search
+	def neighbor_nodes(self, node):
+		"""Returns an iterator object over the neighbors of node"""
+		return (path.to_node for path in self.neighbors[node])
