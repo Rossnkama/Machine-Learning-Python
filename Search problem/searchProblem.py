@@ -39,8 +39,11 @@ class SearchProblem(object):
 class Arc(object):
 	"""Consists of a (from_node, to_node) pair and a non-negative cost"""
 	def __init__(self, from_node, to_node, cost=1, action=None):
+
+		# Making sure that cost arguments are positive
 		assert cost >= 0, ("Cost cannot be negative for", str(from_node), 
 			"->", str(to_node), "Cost:", str(cost))
+
 		self.from_node = from_node
 		self.to_node = to_node
 		self.cost = cost
@@ -49,9 +52,9 @@ class Arc(object):
 	def __repr__(self):
 		"""String representation of an arc"""
 		if self.action:
-			return str(self.from_node),  "--", str(self.action), "-->", str(self.to_node)
+			return str(self.from_node) + "--" + str(self.action) + "-->" + str(self.to_node)
 		else:
-			return str(self.from_node), "-->", str(self.to_node)
+			return str(self.from_node) + "-->" + str(self.to_node)
 
 
 class SearchProblemFromExplicitGraph(SearchProblem):
@@ -70,5 +73,26 @@ class SearchProblemFromExplicitGraph(SearchProblem):
 	"""
 
 	def __init__(self, nodes, arcs, start=None, goals=set(), hmap={}):
-		self.neighs = {}
-		
+		self.neighbors = {}  # {from_node: [arc_1, arc_2... arc_n]}
+		self.nodes = nodes
+
+		for node in nodes:
+			# Initialising empty array of neighbors for a particular node...
+			# to fill in later
+			self.neighbors[node] = []
+
+		self.arcs = arcs
+
+		for arc in arcs:
+			# Appending arcs to from_nodes creating a network of neighbors
+			self.neighbors[arc.from_node].append(arc)
+
+		self.start = start
+		self.goals = goals
+		self.hmap = hmap
+
+	def start_node(self):
+		"""Returns start node"""
+		return self.start
+
+	
